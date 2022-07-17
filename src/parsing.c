@@ -5,28 +5,13 @@
 #include <editline/readline.h> // read input allowing editing
 #include <readline/history.h> // record history of inputs with up and down arrows
 
-/* Compute the number of leaves in the tree 
- *
- *	tree_leaves :: mpc_ast_t* -> int 
- *	tree_leaves [] = 0 
- *	tree_leaves (t tag children .. ) = 
- *	  case tag of 
- *		""		 -> + 0
- *		"number" -> (+ 1)
- *		_		 -> tree_leaves xs
- *
- * */ 
+/* Counting the number of expressions in the tree;
+ * an expression is either a number, or an operator plus an expression*/ 
 int tree_leave(mpc_ast_t* t) {
 	int leaves = 0;
-	if (strstr(t->tag, "expr")) { return leaves++; }
-	
-	int i = 3;
-	while (strstr(t->children[i]->tag, "expr")) {
+	if (strstr(t->children[0]->tag, "number")) {
 		leaves++;
-		
-	}	
-
-	assert(leaves == t->children_num && "tree leave computed, and that contained do not match");
+	}
 	return leaves;
 }
 
@@ -37,6 +22,7 @@ long eval_op(long x, char* op, long y) {
 	if (strcmp(op, "-") == 0) { return x - y; }
 	if (strcmp(op, "/") == 0) { return x / y; }
 	if (strcmp(op, "*") == 0) { return x * y; }
+	if (strcmp(op, "%") == 0) { return x % y; }
 	return 0;
 }
 
@@ -105,7 +91,7 @@ int main(int argc, char** argv) {
 			
 			mpc_ast_print(r.output);
 
-			tree_leave(r.output);
+			printf("The number of leaves in this tree is: %i\n", tree_leave(r.output));
 
 			printf("%li\n", result);
 			mpc_ast_delete(r.output);

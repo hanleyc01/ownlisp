@@ -25,3 +25,6 @@ typedef struct mpc_ast_t {
 mpc_as_t* a = r.output;
 prtinf("Tag: %s\n", a->tag); // rather than a.tag
 ```
+
+- Using `eval_op()` and `eval()`, we can directly evaluate the contents of the AST we generate through our REPL
+
